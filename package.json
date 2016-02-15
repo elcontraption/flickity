@@ -1,0 +1,68 @@
+{
+  "name": "flickity",
+  "version": "1.1.2",
+  "description": "Touch, responsive, flickable galleries",
+  "main": "js/index.js",
+  "style": "css/flickity.css",
+  "dependencies": {
+    "desandro-classie": "~1.0.1",
+    "desandro-matches-selector": "~1.0.2",
+    "doc-ready": "~1.0.3",
+    "eventie": "~1.0.6",
+    "get-size": "~1.2.2",
+    "desandro-get-style-property": "~1.0.4",
+    "wolfy87-eventemitter": "~4.2.11",
+    "unidragger": "~1.1.5",
+    "fizzy-ui-utils": "~1.0.0",
+    "tap-listener": "~1.1.1"
+  },
+  "devDependencies": {
+    "flickity-imagesloaded": "~1.0.0",
+    "flickity-as-nav-for": "~1.0.0",
+    "jquery-bridget": "~1.1.0",
+    "gulp": "^3.8.10",
+    "gulp-jshint": "^1.9.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-util": "^3.0.2",
+    "through2": "^0.6.3",
+    "requirejs": "^2.1.15",
+    "chalk": "^0.5.1",
+    "gulp-replace": "^0.5.1",
+    "gulp-uglify": "^1.0.2",
+    "gulp-json-lint": "0.0.1",
+    "gulp-minify-css": "^0.4.5",
+    "minimist": "^1.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/metafizzy/flickity.git"
+  },
+  "keywords": [
+    "touch",
+    "responsive",
+    "flick",
+    "slider",
+    "carousel",
+    "gallery",
+    "DOM",
+    "browser"
+  ],
+  "author": {
+    "name": "Metafizzy"
+  },
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/metafizzy/flickity/issues"
+  },
+  "homepage": "http://flickity.metafizzy.co",
+  "gitHead": "7bff33607601e62e814ad42b977562adf24fed3e",
+  "readme": "# Flickity (customized)\nThis is essentially a hacked version of Flickity that introduces a hook to apply a function to manipulate cells during animation. It's called on every animation cycle (requestAnimationFrame) so handle with care.\n\nThere is a new option: `transitionEffect` that may be passed a function. Within the function, `this` is bound to the cell.\n\nI needed to be able to scale cells as they move toward or away from the center point, as the slider is repositioned:\n\n```js\nvar transitionEffect = function() {\n    var proximity = Math.abs(this.target - Math.abs(this.parent.x));\n\n    proximity *= 0.1;\n\n    var scale = Math.round((100 - Math.round(proximity) / 1)) / 100;\n\n    if (scale >= 0.8 && scale <= 1) {\n        this.element.style.transform = 'scale(' + scale + ')';\n    }\n};\n\nvar flickity = new Flickity('.my-element', {\n    transitionEffect: transitionEffect\n});\n```\n\n```css\n.cell {\n    margin: 0 -50px; // allow cells to overlap\n    width: 300px;\n    transform: scale(0.5); // initial scale\n}\n\n.cell.is-selected {\n    transform: scale(1); // selected scale\n    z-index: 100 !important;\n    opacity: 1;\n}\n```\n\n_Touch, responsive, flickable galleries_\n\nSee [flickity.metafizzy.co](http://flickity.metafizzy.co) for complete docs and demos.\n\n## Install\n\n### Download\n\n+ CSS:\n  - [flickity.css](https://github.com/metafizzy/flickity/raw/master/dist/flickity.css) un-minified, or\n  - [flickity.css](https://github.com/metafizzy/flickity/raw/master/dist/flickity.min.css) minified\n+ JavaScript:\n  - [flickity.pkgd.js](https://github.com/metafizzy/flickity/raw/master/dist/flickity.pkgd.js) un-minified, or\n  - [flickity.pkgd.min.js](https://github.com/metafizzy/flickity/raw/master/dist/flickity.pkgd.min.js) minified\n\n### CDN\n\nLink directly to [Flickity files on cdnjs](https://cdnjs.com/libraries/flickity).\n\n``` html\n<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/flickity/1.1.2/flickity.css\">\n<!-- or -->\n<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/flickity/1.1.2/flickity.min.css\">\n```\n\n``` html\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/flickity/1.1.2/flickity.pkgd.js\"></script>\n<!-- or -->\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/flickity/1.1.2/flickity.pkgd.min.js\"></script>\n```\n\n### Package managers\n\nBower: `bower install flickity --save`\n\nnpm: `npm install flickity --save`\n\n## License\n\n### Commercial license\n\nIf you want to use Flickity to develop commercial sites, themes, projects, and applications, the Commercial license is the appropriate license. With this option, your source code is kept proprietary. Purchase a Flickity Commercial License at [flickity.metafizzy.co](http://flickity.metafizzy.co/#commercial-license)\n\n### Open source license\n\nIf you are creating an open source application under a license compatible with the [GNU GPL license v3](https://www.gnu.org/licenses/gpl-3.0.html), you may use Flickity under the terms of the GPLv3.\n\n[Read more about Flickity's license](http://flickity.metafizzy.co/license.html).\n\n## Usage\n\nFlickity works with a container element and a set of child cell elements\n\n``` html\n<div class=\"gallery\">\n  <div class=\"cell\">...</div>\n  <div class=\"cell\">...</div>\n  <div class=\"cell\">...</div>\n  ...\n</div>\n```\n\n### Options\n\n``` js\nvar flky = new Flickity( '.gallery', {\n  // options, defaults listed\n\n  accessibility: true,\n  // enable keyboard navigation, pressing left & right keys\n\n  autoPlay: false,\n  // advances to the next cell\n  // if true, default is 3 seconds\n  // or set time between advances in milliseconds\n  // i.e. `autoPlay: 1000` will advance every 1 second\n\n  cellAlign: 'center',\n  // alignment of cells, 'center', 'left', or 'right'\n  // or a decimal 0-1, 0 is beginning (left) of container, 1 is end (right)\n\n  cellSelector: undefined,\n  // specify selector for cell elements\n\n  contain: false,\n  // will contain cells to container\n  // so no excess scroll at beginning or end\n  // has no effect if wrapAround is enabled\n\n  draggable: true,\n  // enables dragging & flicking\n\n  freeScroll: false,\n  // enables content to be freely scrolled and flicked\n  // without aligning cells\n\n  friction: 0.2,\n  // smaller number = easier to flick farther\n\n  initialIndex: 0,\n  // zero-based index of the initial selected cell\n\n  lazyLoad: true,\n  // enable lazy-loading images\n  // set img data-flickity-lazyload=\"src.jpg\"\n  // set to number to load images adjacent cells\n\n  percentPosition: true,\n  // sets positioning in percent values, rather than pixels\n  // Enable if items have percent widths\n  // Disable if items have pixel widths, like images\n\n  prevNextButtons: true,\n  // creates and enables buttons to click to previous & next cells\n\n  pageDots: true,\n  // create and enable page dots\n\n  resize: true,\n  // listens to window resize events to adjust size & positions\n\n  rightToLeft: false,\n  // enables right-to-left layout\n\n  setGallerySize: true,\n  // sets the height of gallery\n  // disable if gallery already has height set with CSS\n\n  watchCSS: false,\n  // watches the content of :after of the element\n  // activates if #element:after { content: 'flickity' }\n  // IE8 and Android 2.3 do not support watching :after\n  // set watch: 'fallbackOn' to enable for these browsers\n\n  wrapAround: false\n  // at end of cells, wraps-around to first for infinite scrolling\n\n});\n```\n\n---\n\nBy [Metafizzy](http://metafizzy.co)\n",
+  "readmeFilename": "README.md",
+  "_id": "flickity@1.1.2",
+  "_shasum": "f9af85c270f2f3cd9bbde25fc80d84d075f313f7",
+  "_from": "git+https://github.com/elcontraption/flickity.git",
+  "_resolved": "git+https://github.com/elcontraption/flickity.git#7bff33607601e62e814ad42b977562adf24fed3e"
+}
